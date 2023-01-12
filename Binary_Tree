@@ -1,0 +1,205 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+class Node{
+public:
+int data;
+Node* left;
+Node* right;
+
+//constructor
+Node(int d){
+  this->data = d;
+  this->left = NULL;
+  this->right = NULL;
+}
+};
+
+//recursive function to build tree
+Node* buildTree(Node* &root){
+  //create a new node
+  int d;
+  cout<<"Enter data"<<endl;
+  cin>>d;
+  root = new Node(d);
+  
+  if(d==-1){
+    return NULL;
+  }
+
+  //left node
+  cout<<"Enter data for left node of "<<d<<endl;
+  root->left = buildTree(root->left);
+  //right node
+  cout<<"Enter data for right node of "<<d<<endl;
+  root->right = buildTree(root->right);
+
+  return root;
+}
+
+//iterative function to build tree from level order input
+void buildFromLevelOrder(Node* &root){
+  //create a queue
+  queue<Node*> q;
+
+  //three step process
+
+  //1. Create a root node
+  cout<<"Enter data for root node"<<endl;
+  int rootdata;
+  cin>>rootdata;
+
+  if(rootdata!=-1){
+    root = new Node(rootdata);
+  }
+
+   q.push(root);
+
+  while(!q.empty()){
+    Node* temp = q.front();
+    q.pop();
+
+    //2. creating left node
+    cout<<"Enter data for left node of "<<temp->data<<endl;
+    int leftdata;
+    cin>>leftdata;
+    if(leftdata!=-1){
+      temp->left = new Node(leftdata);
+      q.push(temp->left);
+    }
+
+    //3. creating right node
+    cout<<"Enter the data for right node of "<<temp->data<<endl;
+    int rightdata;
+    cin>>rightdata;
+    if(rightdata!=-1){
+      temp->right = new Node(rightdata);
+      q.push(temp->right);
+    }
+  }
+}
+
+//iterative function for level order traversal
+void levelOrderTraversal(Node* root){
+  //create a queue
+  queue<Node*> q;
+  //push root in the queue
+  q.push(root);
+  //to manage line break after level 1
+  q.push(NULL);
+
+  while(!q.empty()){
+    Node* temp = q.front();
+    q.pop();
+
+    if(temp==NULL){
+      //level has been completed, add line break
+      cout<<endl;
+      if(!q.empty()){
+        //if queue still contains some child nodes
+        q.push(NULL);
+      }
+    }
+    else{
+      cout<<temp->data<<" ";
+      //push left node is its non-NULL
+      if(temp->left){
+        q.push(temp->left);
+      }
+      //push right node is its non-NULL
+      if(temp->right){
+        q.push(temp->right);
+      }
+    }
+  }
+}
+
+vector<int> reverseLevelOrderTraversal(Node* root){
+  vector<int> ans;
+  //create a queue
+  queue<Node*> q;
+  q.push(root);
+
+  if(root == NULL){
+    //tree is empty
+    return ans;
+  }
+
+  while(!q.empty()){
+    Node* temp = q.front();
+    q.pop();
+
+    ans.push_back(temp->data);
+
+    //left part
+    if(temp->left){
+      q.push(temp->left);
+    }
+    //right part
+    if(temp->right){
+      q.push(temp->right);
+    }
+  }
+  //a stack could have been used to reverse the content
+  reverse(ans.begin(), ans.end());
+  return ans;
+}
+
+//recursive function for InOrder traversal
+void InOrder(Node* root){
+  //base case
+  if(root == NULL){
+    return ;
+  }
+
+  //InOrder Traversal follows LNR logic
+  //left part
+  InOrder(root->left);
+  //print Node
+  cout<<root->data<<" ";
+  //right part
+  InOrder(root->right);
+}
+
+void preOrder(Node* root){
+  //base case
+  if(root == NULL){
+    return ;
+  }
+
+  //PreOrder follows NLR logic
+  //print Node
+  cout<<root->data<<" ";
+  //Left node
+  preOrder(root->left);
+  //right node
+  preOrder(root->right);
+}
+
+void postOrder(Node* root){
+  //base case
+  if(root==NULL){
+    return ;
+  }
+
+  //PostOrder follows LRN logic
+  //Left Node
+  postOrder(root->left);
+  //right Node
+  postOrder(root->right);
+  //print Node
+  cout<<root->data<<" ";
+}
+
+int main(){
+  Node* root = NULL;
+  buildFromLevelOrder(root);
+  levelOrderTraversal(root);
+  cout<<endl;
+  InOrder(root);
+  
+  return 0;
+}
