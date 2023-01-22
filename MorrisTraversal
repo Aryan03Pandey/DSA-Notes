@@ -1,0 +1,30 @@
+//InOrder Morris Traversal
+void morrisTraversal(Node* root){
+  if(root == NULL)
+    return ;
+  
+  Node* curr = root;
+  while(curr!=NULL){
+    //if left child does not exist, print curr node and go to right
+    if(curr->left == NULL){
+      cout<<curr->data<<" ";
+      curr = curr->right;
+    }//if left of curr exists, find inOrder pred 
+    else{
+      Node* pred = curr->left;
+      while(pred->right != NULL && pred->right != curr){
+        pred = pred->right;
+      }
+
+      if(pred->right == NULL){
+        pred->right = curr;
+        curr = curr->left;
+      }
+      else{
+        pred->right = NULL;
+        cout<<curr->data<<" ";
+        curr = curr->right;
+      }
+    }
+  }
+}
